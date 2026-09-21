@@ -21,10 +21,8 @@ else
                       EmptyMessage="Ajoutez des boss avec la barre de recherche ci-dessus."></MonsterTable>
 
         <div class="mt-3 d-flex gap-2">
-            <BackToHomeButton OnClick="NavHome"></BackToHomeButton>
-            <button class="btn btn-primary" @onclick="NavigateToAllBosses">
-                Tous les boss
-            </button>
+            <BackToHomeButton></BackToHomeButton>
+            <AllBossesButton CssClass="btn-primary"></AllBossesButton>
         </div>
     </div>
 }
@@ -90,17 +88,8 @@ else
     private void UpdateURL()
     {
         string ids = string.Join(",", SelectedIds);
-        string url = string.IsNullOrEmpty(ids) ? "/mon-combat" : $"/mon-combat?ids={ids}";
+        string url = string.IsNullOrEmpty(ids) ? "mon-combat" : $"mon-combat?ids={ids}";
         Navigation.NavigateTo(url, replace: true);
     }
 
-    private void NavHome()
-    {
-        Navigation.NavigateTo("/");
-    }
-
-    private void NavigateToAllBosses()
-    {
-        Navigation.NavigateTo("/tous-les-boss");
-    }
 }

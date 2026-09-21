@@ -1,7 +1,21 @@
-<button class="btn btn-secondary" @onclick="OnClick">
+@inject NavigationManager Navigation
+
+<button class="btn btn-secondary" @onclick="HandleClick">
     Retour à l'introduction
 </button>
 
 @code {
     [Parameter] public EventCallback OnClick { get; set; }
+
+    private async Task HandleClick()
+    {
+        if (OnClick.HasDelegate)
+        {
+            await OnClick.InvokeAsync();
+        }
+        else
+        {
+            Navigation.NavigateTo("");
+        }
+    }
 }

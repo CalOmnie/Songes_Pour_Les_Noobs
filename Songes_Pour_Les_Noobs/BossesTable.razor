@@ -1,6 +1,5 @@
 @page "/tous-les-boss"
 @inject MonsterService MonsterService
-@inject NavigationManager Navigation
 
 <PageTitle>Tous les boss</PageTitle>
 
@@ -12,7 +11,7 @@ else
 {
     <div class="main-panel panel-fit-content">
         <div class="mb-2">
-            <BackToHomeButton OnClick="NavHome"></BackToHomeButton>
+            <BackToHomeButton></BackToHomeButton>
         </div>
 
         <div class="heading">Tous les boss</div>
@@ -41,10 +40,5 @@ else
     protected override async Task OnInitializedAsync()
     {
         Monsters = await MonsterService.GetMonstersAsync();
-    }
-
-    private void NavHome()
-    {
-        Navigation.NavigateTo("/");
     }
 }

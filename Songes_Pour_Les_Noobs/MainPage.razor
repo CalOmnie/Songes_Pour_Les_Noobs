@@ -177,9 +177,7 @@ else
                     <div class="col"></div>
 
                     <div class="col-auto text-end d-flex gap-2">
-                        <button class="btn btn-secondary" @onclick="NavigateToAllBosses">
-                            Tous les boss
-                        </button>
+                        <AllBossesButton></AllBossesButton>
                         <button class="btn btn-secondary" @onclick="NavigateToMonCombat">
                             Mon combat
                         </button>
@@ -269,14 +267,9 @@ else
         await Navigate(randomId);
     }
 
-    private void NavigateToAllBosses()
-    {
-        Navigation.NavigateTo("/tous-les-boss");
-    }
-
     private void NavigateToMonCombat()
     {
-        Navigation.NavigateTo("/mon-combat");
+        Navigation.NavigateTo("mon-combat");
     }
 
     private async Task NavHome()

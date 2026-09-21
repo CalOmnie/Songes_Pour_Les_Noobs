@@ -1,0 +1,14 @@
+@inject NavigationManager Navigation
+
+<button class="btn @CssClass" @onclick="Navigate">
+    Tous les boss
+</button>
+
+@code {
+    [Parameter] public string CssClass { get; set; } = "btn-secondary";
+
+    private void Navigate()
+    {
+        Navigation.NavigateTo("tous-les-boss");
+    }
+}
