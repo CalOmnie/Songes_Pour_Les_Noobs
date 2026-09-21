@@ -1,0 +1,106 @@
+@page "/mon-combat"
+@inject MonsterService MonsterService
+@inject NavigationManager Navigation
+
+<PageTitle>Mon combat</PageTitle>
+
+@if (Monsters == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="main-panel panel-fit-content">
+        <div class="heading">Mon combat</div>
+
+        <div class="search-row mt-3 d-flex justify-content-center">
+            <SearchBar Monsters="AllMonsters" OnSelect="AddMonster"></SearchBar>
+        </div>
+
+        <MonsterTable Monsters="@SelectedMonsters" OnRemove="RemoveMonster"
+                      EmptyMessage="Ajoutez des boss avec la barre de recherche ci-dessus."></MonsterTable>
+
+        <div class="mt-3 d-flex gap-2">
+            <BackToHomeButton OnClick="NavHome"></BackToHomeButton>
+            <button class="btn btn-primary" @onclick="NavigateToAllBosses">
+                Tous les boss
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    private Dictionary<int, Monster>? Monsters;
+    private List<Monster> AllMonsters = new();
+    private List<int> SelectedIds = new();
+
+    private IEnumerable<Monster> SelectedMonsters
+    {
+        get
+        {
+            foreach (var id in SelectedIds)
+            {
+                if (Monsters!.TryGetValue(id, out var monster))
+                {
+                    yield return monster;
+                }
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Monsters = await MonsterService.GetMonstersAsync();
+        AllMonsters = Monsters.Values.ToList();
+        ParseURL();
+    }
+
+    private void ParseURL()
+    {
+        var query = QueryStringHelper.GetQuery(Navigation);
+        var idsParam = query["ids"];
+
+        if (!string.IsNullOrWhiteSpace(idsParam))
+        {
+            SelectedIds = idsParam
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => int.TryParse(s, out int id) ? id : (int?)null)
+                .Where(id => id.HasValue && Monsters!.ContainsKey(id.Value))
+                .Select(id => id!.Value)
+                .Distinct()
+                .ToList();
+        }
+    }
+
+    private void AddMonster(int id)
+    {
+        if (!SelectedIds.Contains(id))
+        {
+            SelectedIds.Add(id);
+            UpdateURL();
+        }
+    }
+
+    private void RemoveMonster(int id)
+    {
+        SelectedIds.Remove(id);
+        UpdateURL();
+    }
+
+    private void UpdateURL()
+    {
+        string ids = string.Join(",", SelectedIds);
+        string url = string.IsNullOrEmpty(ids) ? "/mon-combat" : $"/mon-combat?ids={ids}";
+        Navigation.NavigateTo(url, replace: true);
+    }
+
+    private void NavHome()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+    private void NavigateToAllBosses()
+    {
+        Navigation.NavigateTo("/tous-les-boss");
+    }
+}

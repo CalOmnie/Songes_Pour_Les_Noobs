@@ -33,6 +33,12 @@ body {
     margin: 1rem auto;
 }
 
+.panel-fit-content {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .info-panel {
     background-color: rgba(0, 64, 0, 0.5);
     padding: 1rem;
@@ -81,6 +87,12 @@ body {
     display: flex;
     justify-content: center;
     position: relative;
+}
+
+.name-filter {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.5rem;
 }
 
 .heading {

@@ -1,7 +1,6 @@
 ﻿@page "/"
 @using Markdig
-@using YamlDotNet.Serialization
-@inject HttpClient Http
+@inject MonsterService MonsterService
 @inject NavigationManager Navigation
 
 <PageTitle>@PageTitle</PageTitle>
@@ -160,9 +159,7 @@ else
                 @if (SelectedMonster != null)
                 {
                     <div class="col-auto ms-3">
-                        <button class="btn btn-secondary" @onclick="NavHome">
-                            Retour à l'introduction
-                        </button>
+                        <BackToHomeButton OnClick="NavHome"></BackToHomeButton>
                     </div>
 
                     string detailLink = DofensiveBase + SelectedMonster.Id;
@@ -178,6 +175,15 @@ else
                 else
                 {
                     <div class="col"></div>
+
+                    <div class="col-auto text-end d-flex gap-2">
+                        <button class="btn btn-secondary" @onclick="NavigateToAllBosses">
+                            Tous les boss
+                        </button>
+                        <button class="btn btn-secondary" @onclick="NavigateToMonCombat">
+                            Mon combat
+                        </button>
+                    </div>
                 }
 
                 <div class="col-auto me-3 text-end">
@@ -227,24 +233,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var yamlText = await Http.GetStringAsync("Data/monsters.yaml");
-
-        var deserializer = new DeserializerBuilder().Build();
-
-        List<Monster> initial = deserializer.Deserialize<List<Monster>>(yamlText);
-        Monsters = initial.ToDictionary(m => m.Id);
-        if (Monsters.ContainsKey(5666))
-        {
-            Console.WriteLine("yes");
-        }
+        Monsters = await MonsterService.GetMonstersAsync();
 
         ParseURL();
     }
 
     private void ParseURL()
     {
-        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
-        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        var query = QueryStringHelper.GetQuery(Navigation);
 
         if (int.TryParse(query["id"], out int id))
         {
@@ -271,6 +267,16 @@ else
 
         var randomId = Monsters.Keys.ElementAt(random.Next(Monsters.Count));
         await Navigate(randomId);
+    }
+
+    private void NavigateToAllBosses()
+    {
+        Navigation.NavigateTo("/tous-les-boss");
+    }
+
+    private void NavigateToMonCombat()
+    {
+        Navigation.NavigateTo("/mon-combat");
     }
 
     private async Task NavHome()

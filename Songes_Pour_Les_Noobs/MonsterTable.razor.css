@@ -1,0 +1,94 @@
+.table-scroll {
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+.bosses-table {
+    border-collapse: collapse;
+    color: white;
+}
+
+    .bosses-table th,
+    .bosses-table td {
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .bosses-table thead th {
+        color: #a5d907;
+        white-space: nowrap;
+    }
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+    .sortable:hover {
+        color: white;
+    }
+
+.name-cell {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.table-difficulty {
+    display: inline-block;
+}
+
+    .table-difficulty ::deep .difficulty-container {
+        padding-top: 0;
+    }
+
+    .table-difficulty ::deep .difficulty-label {
+        display: none;
+    }
+
+    .table-difficulty ::deep .star {
+        height: 14px;
+        margin: 0.5px;
+    }
+
+.boss-thumb {
+    height: 40px;
+    width: 40px;
+    object-fit: contain;
+    border: 1px solid #c3a057;
+    border-radius: 6px;
+    background-color: #cfcfcf;
+    padding: 2px;
+}
+
+.boss-row {
+    cursor: pointer;
+}
+
+    .boss-row:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+.remove-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+    .remove-btn:hover {
+        background-color: rgba(195, 160, 87, 0.35);
+        border-color: #c3a057;
+    }
+
+.no-results {
+    padding: 1rem;
+    text-align: center;
+    font-style: italic;
+}

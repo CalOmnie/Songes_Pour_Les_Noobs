@@ -1,4 +1,6 @@
-﻿namespace Songes_Pour_Les_Noobs
+﻿using YamlDotNet.Serialization;
+
+namespace Songes_Pour_Les_Noobs
 {
     public class Monster
     {
@@ -19,5 +21,29 @@
 
         public string? Illustration { get; set; } = null;
         public string? Caption { get; set; } = null;
+    }
+
+    public class MonsterService
+    {
+        private readonly HttpClient http;
+        private Dictionary<int, Monster>? monsters;
+
+        public MonsterService(HttpClient http)
+        {
+            this.http = http;
+        }
+
+        public async Task<Dictionary<int, Monster>> GetMonstersAsync()
+        {
+            if (monsters == null)
+            {
+                var yamlText = await http.GetStringAsync("Data/monsters.yaml");
+                var deserializer = new DeserializerBuilder().Build();
+                List<Monster> initial = deserializer.Deserialize<List<Monster>>(yamlText);
+                monsters = initial.ToDictionary(m => m.Id);
+            }
+
+            return monsters;
+        }
     }
 }

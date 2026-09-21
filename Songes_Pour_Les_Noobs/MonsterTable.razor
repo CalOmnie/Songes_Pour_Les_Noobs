@@ -1,0 +1,113 @@
+@inject NavigationManager Navigation
+
+<div class="table-scroll">
+    <table class="bosses-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th class="sortable" @onclick="() => SetSort(SortColumn.Name)">Nom@(SortIndicator(SortColumn.Name))</th>
+                <th class="sortable" @onclick="() => SetSort(SortColumn.Difficulty)">Difficulté@(SortIndicator(SortColumn.Difficulty))</th>
+                <th class="sortable" @onclick="() => SetSort(SortColumn.Focus)">Focus immédiat@(SortIndicator(SortColumn.Focus))</th>
+                <th class="sortable" @onclick="() => SetSort(SortColumn.Evasion)">Esquive@(SortIndicator(SortColumn.Evasion))</th>
+                <th class="sortable" @onclick="() => SetSort(SortColumn.Tank)">Tank@(SortIndicator(SortColumn.Tank))</th>
+                @if (OnRemove.HasDelegate)
+                {
+                    <th></th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var monster in SortedMonsters)
+            {
+                <tr class="boss-row" @onclick="() => NavigateToBoss(monster.Id)">
+                    <td><img src="Images/@monster.Image" class="boss-thumb" /></td>
+                    <td class="name-cell" title="@monster.Name">@monster.Name</td>
+                    <td>
+                        <div class="table-difficulty">
+                            <DifficultyScale Difficulty="@monster.Difficulty"></DifficultyScale>
+                        </div>
+                    </td>
+                    <td><StatBar Value="@monster.ImmediateFocus"></StatBar></td>
+                    <td><StatBar Value="@monster.Evasion"></StatBar></td>
+                    <td><StatBar Value="@monster.Tanking"></StatBar></td>
+                    @if (OnRemove.HasDelegate)
+                    {
+                        <td>
+                            <button type="button" class="remove-btn" title="Retirer"
+                                    @onclick="() => Remove(monster.Id)" @onclick:stopPropagation="true">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (!Monsters.Any())
+    {
+        <div class="no-results">@EmptyMessage</div>
+    }
+</div>
+
+@code {
+    private enum SortColumn { Name, Difficulty, Focus, Evasion, Tank }
+
+    [Parameter] public IEnumerable<Monster> Monsters { get; set; } = Enumerable.Empty<Monster>();
+    [Parameter] public EventCallback<int> OnRemove { get; set; }
+    [Parameter] public string EmptyMessage { get; set; } = "Aucun boss à afficher.";
+
+    private SortColumn CurrentSort = SortColumn.Name;
+    private bool SortAscending = true;
+
+    private IEnumerable<Monster> SortedMonsters
+    {
+        get
+        {
+            Func<Monster, IComparable> keySelector = CurrentSort switch
+            {
+                SortColumn.Difficulty => m => m.Difficulty,
+                SortColumn.Focus => m => m.ImmediateFocus,
+                SortColumn.Evasion => m => m.Evasion,
+                SortColumn.Tank => m => m.Tanking,
+                _ => m => m.Name,
+            };
+
+            return SortAscending ? Monsters.OrderBy(keySelector) : Monsters.OrderByDescending(keySelector);
+        }
+    }
+
+    private void SetSort(SortColumn column)
+    {
+        if (CurrentSort == column)
+        {
+            SortAscending = !SortAscending;
+        }
+        else
+        {
+            CurrentSort = column;
+            SortAscending = false;
+        }
+    }
+
+    private MarkupString SortIndicator(SortColumn column)
+    {
+        if (CurrentSort != column)
+        {
+            return (MarkupString)string.Empty;
+        }
+
+        string icon = SortAscending ? "bi-caret-up-fill" : "bi-caret-down-fill";
+        return (MarkupString)$" <i class=\"bi {icon}\"></i>";
+    }
+
+    private void NavigateToBoss(int id)
+    {
+        Navigation.NavigateTo($"/?id={id}");
+    }
+
+    private async Task Remove(int id)
+    {
+        await OnRemove.InvokeAsync(id);
+    }
+}

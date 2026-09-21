@@ -1,0 +1,35 @@
+<div class="stat-bar @(Large ? "stat-bar-large" : "")">
+    @{
+        string fillColor = GetColor(Value);
+    }
+    @for (int i = 0; i < 10; i++)
+    {
+        string color = i < Value ? fillColor : unFilled;
+        <div class="bar-segment" style="background-color: @color"></div>
+    }
+</div>
+
+@code {
+    [Parameter] public int Value { get; set; }
+    [Parameter] public bool Large { get; set; }
+    private string unFilled = "#444";
+
+    private static string GetColor(int value)
+    {
+        return value switch
+        {
+            0 => "#999999",   // neutral gray for “no color”
+            1 => "#ff6666",   // light red
+            2 => "#ff3333",   // red
+            3 => "#cc0000",   // darker red
+            4 => "#ff9900",   // orange
+            5 => "#ffff00",   // yellow
+            6 => "#99cc00",   // olive green
+            7 => "#66cc00",   // medium green
+            8 => "#33cc00",   // slightly darker green
+            9 => "#00cc00",   // vivid green
+            10 => "#00ff00",  // bright pure green
+            _ => "#ffffff"
+        };
+    }
+}

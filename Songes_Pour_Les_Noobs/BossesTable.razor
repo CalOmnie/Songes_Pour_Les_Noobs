@@ -1,0 +1,50 @@
+@page "/tous-les-boss"
+@inject MonsterService MonsterService
+@inject NavigationManager Navigation
+
+<PageTitle>Tous les boss</PageTitle>
+
+@if (Monsters == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="main-panel panel-fit-content">
+        <div class="mb-2">
+            <BackToHomeButton OnClick="NavHome"></BackToHomeButton>
+        </div>
+
+        <div class="heading">Tous les boss</div>
+
+        <div class="mt-3">
+            <input type="text" class="name-filter" placeholder="Filtrer par nom..."
+                   @bind="NameFilter" @bind:event="oninput" />
+        </div>
+
+        <MonsterTable Monsters="@DisplayedMonsters" EmptyMessage="Aucun boss ne correspond à ce filtre."></MonsterTable>
+    </div>
+}
+
+@code {
+    private Dictionary<int, Monster>? Monsters;
+
+    private string NameFilter = string.Empty;
+
+    private static readonly HashSet<string> EasterEggNames = new() { "Crocus", "Diddy", "Epstein" };
+
+    private IEnumerable<Monster> DisplayedMonsters =>
+        (Monsters?.Values ?? Enumerable.Empty<Monster>())
+            .Where(m => !EasterEggNames.Contains(m.Name))
+            .Where(m => string.IsNullOrWhiteSpace(NameFilter) || MonsterNameMatcher.Matches(m.Name, NameFilter));
+
+    protected override async Task OnInitializedAsync()
+    {
+        Monsters = await MonsterService.GetMonstersAsync();
+    }
+
+    private void NavHome()
+    {
+        Navigation.NavigateTo("/");
+    }
+}

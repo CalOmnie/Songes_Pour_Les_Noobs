@@ -1,6 +1,4 @@
-﻿@using System.Globalization
-
-<div class="search-container">
+﻿<div class="search-container">
     <input type="text"
            class="search-bar"
            placeholder="Rechercher un boss..."
@@ -33,12 +31,7 @@
     private IEnumerable<Monster> FilteredMonsters =>
         string.IsNullOrWhiteSpace(searchTerm)
             ? Enumerable.Empty<Monster>()
-            : Monsters.Where(m =>
-                CultureInfo.CurrentCulture.CompareInfo.IndexOf(
-                    m.Name,
-                    searchTerm,
-                    CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace
-                ) >= 0);
+            : Monsters.Where(m => MonsterNameMatcher.Matches(m.Name, searchTerm));
 
     private async Task OnNavigate(int id)
     {
