@@ -1338,7 +1338,8 @@
     - Tape à 6 PO en ligne (1x par tour). Pour 1 tour, sa poupée va renvoyer 100% de dégâts sur cette cible
     - Invoque une poupée qui se tape elle-même à la fin de son tour (1 max, relance illimité)
     - La poupée coop à 10 PO sans ligne de vue et retire 5 PO pour 2 tours (relance 4)
-    - Bénédiction Moonesque: Chaque mob soigne ses alliés en cercle 2 à la hauteur des dégâts subi (2 tours, relance 4)
+  Mechanic: |
+    - <u>**Chaque mob soigne ses alliés en cercle 2 à la hauteur des dégâts subi.**</u>
   Advice: |
     - Pesanteur en zone au tour 1 peut être utile pour empêcher la coop de la poupée, sinon anticiper les risques
     - Son combo avec la poupée tape fort. Esquiver le sort à 6 PO est conseillé vu la facilité de la chose (même le ret PO fonctionne)
